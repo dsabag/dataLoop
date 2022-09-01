@@ -1,39 +1,43 @@
 import scrape from "website-scraper";
 import PuppeteerPlugin from "website-scraper-puppeteer";
+import SaveToExistingDirectoryPlugin from "website-scraper-existing-directory";
+import cherio from "cherio";
+import fs from "fs";
 
-// with async/await
-// const result = await scrape(options);
-
-// with promise
-// export const scraper = () => {
-//   const options = {
-//     urls: ["https://angular.io/"],
-//     directory: "./data",
-//   };
-
-//   scrape(options).then((result) => {
-//     console.log(result);
-//   });
-// };
-
-// import scrape from "website-scraper";
-
-// export const initScraper = () => {
-//   console.log("boom");
-// };
-
-export const scraper = async () => {
+export const scraper = async (originalUrl, depth) => {
   const result = await scrape({
-    urls: ["https://angular.io/"],
+    urls: [originalUrl],
     directory: "./data",
+    recursive: !!depth,
+    maxRecursiveDepth: depth,
+    sources: [{ selector: "img", attr: "src" }],
     plugins: [
+      new SaveToExistingDirectoryPlugin(),
       new PuppeteerPlugin({
         launchOptions: { headless: true },
-        scrollToBottom: { timeout: 4000, viewportN: 10 },
         blockNavigation: true,
       }),
     ],
   });
 
-  console.log(result);
+  const resultsStructure = { results: [] };
+
+  result.forEach((resource) => {
+    const $ = cherio.load(resource.text);
+
+    $("img").each((index, image) => {
+      let img = $(image).attr("src");
+
+      resultsStructure.results.push({
+        imageUrl: img,
+        sourceUrl: resource.url,
+        depth: resource.depth,
+      });
+    });
+  });
+
+  fs.writeFileSync(
+    "src/utils/data/results.json",
+    JSON.stringify(resultsStructure)
+  );
 };

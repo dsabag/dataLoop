@@ -7,7 +7,7 @@ export const argsValidator = (args) => {
 
   //trim the keys from the values
   const originalUrl = args[0];
-  const depth = args[1];
+  const depth = parseInt(args[1]);
 
   const validUrlRegex =
     /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
@@ -18,7 +18,7 @@ export const argsValidator = (args) => {
   }
 
   //check that depth has a numeric value
-  if (isNaN(parseInt(depth))) {
+  if (isNaN(depth)) {
     return console.log("depth must be a string");
   }
 

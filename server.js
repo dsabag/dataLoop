@@ -10,4 +10,4 @@ const validatedArgs = argsValidator(args);
 
 //scrape
 
-scraper();
+scraper(validatedArgs.url, validatedArgs.depth);
