@@ -2,7 +2,7 @@
   "name": "dataloop",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/dsabag/dataLoop/issues"
   },
-  "homepage": "https://github.com/dsabag/dataLoop#readme"
+  "homepage": "https://github.com/dsabag/dataLoop#readme",
+  "type": "module",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "website-scraper": "^5.3.0",
+    "website-scraper-puppeteer": "^1.0.0"
+  }
 }
